@@ -2,33 +2,39 @@
   <!-- 商品分类导航 -->
   <div class="type-nav">
     <div class="container">
-      <div @mouseleave="leaveIndex()">
+      <div @mouseleave="leaveIndex()" @mouseenter="enterShowSortList">
         <h2 class="all">全部商品分类</h2>
-        <div class="sort">
-          <div class="all-sort-list2">
-            <div class="item" v-for="(c1,index) in categoryList" :key="c1.categoryId"
-                 :class="{cur:currentIndex===index}"
-            >
-              <h3 @mouseenter="changeIndex(index)">
-                <a href="">{{ c1.categoryName }}</a>
-              </h3>
-              <div class="item-list clearfix" :style="{display:currentIndex===index?'block':'none'}">
-                <div class="subitem" v-for="c2 in c1.categoryChild" :key="c2.categoryId">
-                  <dl class="fore">
-                    <dt>
-                      <a href="">{{ c2.categoryName }}</a>
-                    </dt>
-                    <dd>
-                      <em v-for="c3 in c2.categoryChild" :key="c3.categoryId">
-                        <a href="">{{ c3.categoryName }}</a>
-                      </em>
-                    </dd>
-                  </dl>
+        <transition name="sort">
+          <div class="sort" v-show="showSortList">
+            <div class="all-sort-list2" @click="goSearch">
+              <div class="item" v-for="(c1,index) in categoryList" :key="c1.categoryId"
+                   :class="{cur:currentIndex===index}"
+              >
+                <h3 @mouseenter="changeIndex(index)">
+                  <a :data-categoryName="c1.categoryName" :data-categoryId1="c1.categoryId">{{ c1.categoryName }}</a>
+                </h3>
+                <div class="item-list clearfix" :style="{display:currentIndex===index?'block':'none'}">
+                  <div class="subitem" v-for="c2 in c1.categoryChild" :key="c2.categoryId">
+                    <dl class="fore">
+                      <dt>
+                        <a :data-categoryName="c2.categoryName" :data-categoryId2="c2.categoryId"> {{
+                            c2.categoryName
+                          }}</a>
+                      </dt>
+                      <dd>
+                        <em v-for="c3 in c2.categoryChild" :key="c3.categoryId">
+                          <a :data-categoryName="c3.categoryName" :data-categoryId3="c3.categoryId">{{
+                              c3.categoryName
+                            }}</a>
+                        </em>
+                      </dd>
+                    </dl>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </transition>
       </div>
       <nav class="nav">
         <a href="###">服装城</a>
@@ -46,16 +52,21 @@
 
 <script>
 import {mapState} from 'vuex';
+import throttle from 'lodash/throttle';
 
 export default {
   name: 'TypeNav',
   data() {
     return {
       currentIndex: -1,
+      showSortList: true,
     };
   },
   mounted() {
     this.$store.dispatch('getCategoryList');
+    if (this.$route.path !== '/home') {
+      this.showSortList = false;
+    }
   },
   computed: {
     ...mapState({
@@ -63,11 +74,40 @@ export default {
     }),
   },
   methods: {
-    changeIndex(index) {
-      this.currentIndex = index;
-    },
     leaveIndex() {
       this.currentIndex = -1;
+      if (this.$route.path !== '/home') {
+        this.showSortList = false;
+      }
+    },
+    enterShowSortList() {
+      this.showSortList = true;
+    },
+    changeIndex: throttle(function(index) {
+      this.currentIndex = index;
+    }, 50),
+    goSearch(e) {
+      let {categoryname, categoryid1, categoryid2, categoryid3} = e.target.dataset;
+      if (categoryname) {
+        let location = {name: 'Search'};
+        let query = {categoryName: categoryname};
+        if (categoryid1) {
+          query.category1Id = categoryid1;
+        } else if (categoryid2) {
+          query.category2Id = categoryid2;
+        } else if (categoryid3) {
+          query.category3Id = categoryid3;
+        }
+        if (this.$route.params) {
+          location.params = this.$route.params;
+        }
+        location.query = query;
+        this.$router.push(location);
+
+        if (this.$route.path !== '/home') {
+          this.showSortList = false;
+        }
+      }
     },
   },
 };
@@ -194,6 +234,21 @@ export default {
           background: skyblue;
         }
       }
+    }
+
+    //过度动画
+    .sort-enter {
+      height: 0;
+    }
+
+    //过度动画
+    .sort-enter-text {
+      height: 461px;
+    }
+
+    //过度动画
+    .sort-enter-active {
+      transition: all .5s linear;
     }
   }
 }

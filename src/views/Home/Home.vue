@@ -3,18 +3,12 @@
     <div>
       <!-- 三级联动全局组件！ -->
       <TypeNav/>
-
       <ListContainer/>
-
       <Recommend/>
-
       <Rank/>
-
       <Like/>
-
       <Floor/>
       <Floor/>
-
       <Brand/>
     </div>
   </div>

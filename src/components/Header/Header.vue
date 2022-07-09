@@ -36,7 +36,7 @@
       <div class="searchArea">
         <form action="###" class="searchForm">
           <input type="text" id="autocomplete" class="input-error input-xxlarge"
-                 v-model="keyword"
+                 v-model.trim="keyword"
           />
           <button class="sui-btn btn-xlarge btn-danger" type="button"
                   @click="goSearch">
@@ -65,9 +65,7 @@ export default {
       //第二种方式：对象方式
       this.$router.push({
         name: 'Search',
-        query: {
-          k: this.keyword.toUpperCase(),
-        },
+        query: this.$route.query,
         params: {
           keyword: this.keyword,
         },
