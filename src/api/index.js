@@ -9,7 +9,7 @@ export const reqGetCategoryList = () =>requests.get(`/product/getBaseCategoryLis
 //获取banner（Home首页轮播图接口）
 export const reqGetBannerList = () => mockRequests.get("/banner");
 //获取floor数据
-export const reqFloorList = () => mockRequests.get("/floor");
+export const reqGetFloorList = () => mockRequests.get("/floor");
 //获取搜索模块数据 地址:/api/list  请求方式:post  参数:需要带参数
 //当前这个函数需不需要接受外部传递参数
 //当前这个接口（获取搜索模块的数据），给服务器传递一个默认参数【至少是一个空对象】
