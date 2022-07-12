@@ -56,6 +56,11 @@ export default {
       keyword: '',
     };
   },
+  mounted() {
+    this.$bus.$on('clearKeyword', () => {
+      this.keyword = '';
+    });
+  },
   methods: {
     // 搜索按钮回调函数，需要向search路由的调转
     goSearch() {

@@ -53,7 +53,6 @@
 </template>
 
 <script>
-import Swiper from 'swiper';
 
 export default {
   name: 'Floor',
@@ -61,41 +60,6 @@ export default {
     floor: {
       type: Object,
       required: true,
-    },
-  },
-  mounted() {
-    new Swiper(this.$refs.floor1Swiper, {
-      autoplay: {
-        delay: 1000,//1秒切换一次
-      },
-      loop: true,
-      //如果需要分页器
-      pagination: {el: '.swiper-pagination', clickable: true},
-      //如果需要前进后退按钮
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      },
-    });
-  },
-  watch: {
-    floor: {
-      immediate: true,
-      handler() {
-        new Swiper(this.$refs.floor1Swiper, {
-          autoplay: {
-            delay: 1000,//1秒切换一次
-          },
-          loop: true,
-          //如果需要分页器
-          pagination: {el: '.swiper-pagination', clickable: true},
-          //如果需要前进后退按钮
-          navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-          },
-        });
-      },
     },
   },
 };

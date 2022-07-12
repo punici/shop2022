@@ -91,7 +91,6 @@
 
 <script>
 import {mapState} from 'vuex';
-import Swiper from 'swiper';
 
 export default {
   name: 'ListContainer',
@@ -102,27 +101,6 @@ export default {
     ...mapState({
       bannerList: state => state.home.bannerList,
     }),
-  },
-  watch: {
-    bannerList: {
-      handler() {
-        this.$nextTick(() => {
-          new Swiper(this.$refs.mySwiper, {
-            autoplay: {
-              delay: 1000,//1秒切换一次
-            },
-            loop: true,
-            //如果需要分页器
-            pagination: {el: '.swiper-pagination', clickable: true},
-            //如果需要前进后退按钮
-            navigation: {
-              nextEl: '.swiper-button-next',
-              prevEl: '.swiper-button-prev',
-            },
-          });
-        });
-      },
-    },
   },
 };
 </script>
