@@ -20,20 +20,40 @@
             <li class="with-x" v-if="searchParams.keyword">
               {{ searchParams.keyword }}
               <em @click="removeKeyword">×</em>
+              <!--品牌的面包屑-->
+            <li class="with-x" v-if="searchParams.trademark">
+              {{ searchParams.trademark.split(':')[1] }}
+              <em @click="removeTrademark">×</em>
+            </li>
+            <!--属性的面包屑-->
+            <li class="with-x" v-for="(prop,index) in searchParams.props" :key="index">
+              {{ prop.split(':')[1] }}
+              <em @click="removeAttr(index)">×</em>
             </li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector/>
+        <SearchSelector @trademarkInfo="trademarkInfo" @attrInfo="attrInfo"/>
 
         <!--details-->
         <div class="details clearfix">
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li :class="{active:orderContain('1')}" @click="changeOrder('1')">
+                  <a>综合
+                    <span v-show="orderContain('1')"
+                          class="iconfont" :class="{ 'icon-UP':orderContain('asc'),'icon-DOWN':orderContain('desc')}">
+                    </span>
+                  </a>
+                </li>
+                <li :class="{active:orderContain('2')}" @click="changeOrder('2')">
+                  <a>价格
+                    <span v-show="orderContain('2')"
+                          class="iconfont" :class="{ 'icon-UP':orderContain('asc'),'icon-DOWN':orderContain('desc')}">
+                    </span>
+                  </a>
                 </li>
                 <li>
                   <a href="#">销量</a>
@@ -43,12 +63,6 @@
                 </li>
                 <li>
                   <a href="#">评价</a>
-                </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
                 </li>
               </ul>
             </div>
@@ -133,7 +147,7 @@ export default {
         category3Id: '',
         categoryName: '',
         keyword: '',
-        order: '',
+        order: '1:desc',
         props: [],
         trademark: '',
         pageNo: 1,
@@ -141,9 +155,9 @@ export default {
       },
     };
   },
-  // beforeMount() {
-  //   Object.assign(this.searchParams, this.$route.query,this.$route.params);
-  // },
+  beforeMount() {
+    Object.assign(this.searchParams, this.$route.query, this.$route.params);
+  },
   mounted() {
     this.search();
   },
@@ -173,6 +187,44 @@ export default {
       });
       //通知兄弟组件Header清除关键字
       this.$bus.$emit('clearKeyword');
+    },
+    trademarkInfo(trademark) {
+      this.searchParams.trademark = `${trademark.tmId}:${trademark.tmName}`;
+      this.search();
+    },
+    removeTrademark() {
+      this.searchParams.trademark = undefined;
+      this.search();
+    },
+    attrInfo(attr, attrValue) {
+      console.log(attr, attrValue);
+      const props = `${attr.attrId}:${attrValue}:${attr.attrName}`;
+      //去重
+      if (this.searchParams.props.indexOf(props) === -1) {
+        this.searchParams.props.push(props);
+      }
+      this.search();
+    },
+    removeAttr(index) {
+      if (index !== -1) {
+        this.searchParams.props.splice(index, 1);
+      }
+      this.search();
+    },
+    orderContain(order) {
+      return this.searchParams.order.indexOf(order) !== -1;
+    },
+    changeOrder(orderNo) {
+      if (this.orderContain(orderNo)) {
+        if (this.orderContain('asc')) {
+          this.searchParams.order = `${orderNo}:desc`;
+        } else {
+          this.searchParams.order = `${orderNo}:asc`;
+        }
+      } else {
+        this.searchParams.order = `${orderNo}:desc`;
+      }
+      this.search();
     },
   },
   watch: {
