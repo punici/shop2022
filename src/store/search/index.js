@@ -15,7 +15,6 @@ const actions = {
   //获取搜索页面的数据
   async getSearchInfo({commit}, params) {
     const result = await reqGetSearchInfo(params);
-    console.log(result);
     if (result.code === 200) {
       commit('SEARCH_INFO', result.data);
     } else {

@@ -95,35 +95,9 @@
               </li>
             </ul>
           </div>
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted"><span>...</span></li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div><span>共10页&nbsp;</span></div>
-            </div>
-          </div>
+
+          <Pagination :currentPage="searchParams.pageNo" :pageSize="searchParams.pageSize" :showPageNo="5"
+                      :total="totalPage" @currentChange="currentChange"></Pagination>
         </div>
       </div>
     </div>
@@ -132,7 +106,7 @@
 
 <script>
 import SearchSelector from './SearchSelector/SearchSelector';
-import {mapGetters} from 'vuex';
+import {mapGetters, mapState} from 'vuex';
 
 export default {
   name: 'Search',
@@ -163,6 +137,9 @@ export default {
   },
   computed: {
     ...mapGetters(['goodsList']),
+    ...mapState({
+      totalPage: state => state.search.searchInfo.total,
+    }),
   },
   methods: {
     search() {
@@ -197,7 +174,6 @@ export default {
       this.search();
     },
     attrInfo(attr, attrValue) {
-      console.log(attr, attrValue);
       const props = `${attr.attrId}:${attrValue}:${attr.attrName}`;
       //去重
       if (this.searchParams.props.indexOf(props) === -1) {
@@ -224,6 +200,10 @@ export default {
       } else {
         this.searchParams.order = `${orderNo}:desc`;
       }
+      this.search();
+    },
+    currentChange(pageNo) {
+      this.searchParams.pageNo = pageNo;
       this.search();
     },
   },
