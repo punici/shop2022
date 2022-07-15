@@ -1,9 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '../views/Home/Home.vue';
-import Search from '../views/Search/Search';
-import Login from '../views/Login/Login';
-import Register from '../views/Register/Register';
+import routes from './routes';
 
 Vue.use(VueRouter);
 
@@ -48,40 +45,15 @@ VueRouter.prototype.replace = function(location, resolve, reject) {
   }
 };
 
-const routes = [
-  {
-    path: '/home',
-    name: 'Home',
-    component: Home,
-    meta: {isHideFooter: true},
-  },
-  {
-    path: '/search/:keyword?',
-    name: 'Search',
-    component: Search,
-    meta: {isHideFooter: true},
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: Login,
-    meta: {isHideFooter: false},
-  },
-  {
-    path: '/register',
-    name: 'Register',
-    component: Register,
-    meta: {isHideFooter: false},
-  },
-  // 重定向,在项目跑起来的时候，访问/，默认跳转到首页
-  {
-    path: '/',
-    redirect: '/home',
-  },
-];
-
 const router = new VueRouter({
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
+    } else {
+      return { x: 0, y: 0 };
+    }
+  }
 });
 
 export default router;

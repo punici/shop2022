@@ -3,8 +3,10 @@ import Vuex from 'vuex';
 //引入Vue
 import Vue from 'vue';
 //引入home|search模块的仓库
-import home from './home';
-import search from './search';
+import home from './home.js';
+import search from './search.js';
+import detail from './detail.js';
+
 //使用插件
 Vue.use(Vuex);
 
@@ -14,5 +16,6 @@ export default new Vuex.Store({
   modules: {
     home,
     search,
+    detail,
   },
 });
