@@ -1,8 +1,8 @@
 <template>
-  <div class="swiper-container">
+  <div class="swiper-container" ref="mySwiper">
     <div class="swiper-wrapper">
-      <div class="swiper-slide">
-        <img src="../images/s1.png">
+      <div class="swiper-slide" v-for="imageObj in skuImageList" :key="imageObj.id">
+        <img v-if="imageObj.imgUrl" :src="imageObj.imgUrl"/>
       </div>
     </div>
     <div class="swiper-button-next"></div>
@@ -15,6 +15,35 @@
   import Swiper from 'swiper'
   export default {
     name: "ImageList",
+    props: {
+      skuImageList: {
+        type: Array,
+        default: () => [],
+      },
+    },
+    watch: {
+      carouselList: {
+        immediate: true,
+        handler() {
+          this.$nextTick(() => {
+            this.mySwiper = new Swiper(this.$refs.mySwiper, {
+              autoplay: {
+                delay: 1000,
+                disableOnInteraction: false,
+              },
+              loop: true,
+              pagination: {
+                el: '.swiper-pagination',
+              },
+              navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+              },
+            });
+          });
+        },
+      },
+    },
   }
 </script>
 
