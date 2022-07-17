@@ -1,11 +1,11 @@
 <template>
   <div class="spec-preview">
-    <img :src="skuImage.imgUrl" alt=""/>
-    <div class="event"></div>
+    <img src="../images/s1.png" alt=""/>
+    <div class="event" @mousemove="changeMove"></div>
     <div class="big">
-      <img :src="skuImage.imgUrl" alt=""/>
+      <img src="../images/s1.png" alt="" ref="big"/>
     </div>
-    <div class="mask"></div>
+    <div class="mask" ref="mask"></div>
   </div>
 </template>
 
@@ -20,7 +20,7 @@ export default {
   data() {
     return {
       currentIndex: 0,
-    }
+    };
   },
   mounted() {
     this.$bus.$on('changeCurrentImgIndex', (index) => {
@@ -29,10 +29,31 @@ export default {
   },
   computed: {
     skuImage() {
-      return this.skuImageList[this.currentIndex]||{};
+      return this.skuImageList[this.currentIndex] || {};
     },
   },
-
+  methods: {
+    //鼠标移动事件
+    changeMove(event) {
+      //获取遮罩层
+      let mask = this.$refs.mask;
+      let big = this.$refs.big;
+      //计算出移动的时候遮罩层l、t
+      let l = event.offsetX - mask.offsetWidth / 2;
+      let t = event.offsetY - mask.offsetHeight / 2;
+      //约束left|top数值
+      if (l <= 0) l = 0;
+      if (l >= mask.offsetWidth) l = mask.offsetWidth;
+      if (t <= 0) t = 0;
+      if (t >= mask.offsetHeight) t = mask.offsetHeight;
+      //动态修改遮罩层的l、t
+      mask.style.left = l + 'px';
+      mask.style.top = t + 'px';
+      //修改大图的left|top
+      big.style.left = -2 * l + 'px';
+      big.style.top = -2 * t + 'px';
+    },
+  },
 };
 </script>
 
