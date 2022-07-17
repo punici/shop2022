@@ -1,8 +1,9 @@
 <template>
   <div class="swiper-container" ref="mySwiper">
     <div class="swiper-wrapper">
-      <div class="swiper-slide" v-for="imageObj in skuImageList" :key="imageObj.id">
-        <img v-if="imageObj.imgUrl" :src="imageObj.imgUrl"/>
+      <div class="swiper-slide" v-for="(imageObj,index) in skuImageList" :key="imageObj.id">
+        <img v-if="imageObj.imgUrl" :src="imageObj.imgUrl"
+            :class="{active:currentIndex===index}" @click="changeCurrentIndex(index)"/>
       </div>
     </div>
     <div class="swiper-button-next"></div>
@@ -21,20 +22,19 @@
         default: () => [],
       },
     },
+    data() {
+      return {
+        currentIndex: 0,
+      }
+    },
     watch: {
-      carouselList: {
+      skuImageList: {
         immediate: true,
         handler() {
           this.$nextTick(() => {
             this.mySwiper = new Swiper(this.$refs.mySwiper, {
-              autoplay: {
-                delay: 1000,
-                disableOnInteraction: false,
-              },
-              loop: true,
-              pagination: {
-                el: '.swiper-pagination',
-              },
+              slidesPerView: 3,
+              slidesPerGroup: 3,
               navigation: {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev',
@@ -42,6 +42,13 @@
             });
           });
         },
+      },
+    },
+    methods: {
+      changeCurrentIndex(index) {
+        this.currentIndex = index;
+        // 通知兄弟组件，更新当前图片的索引
+        this.$bus.$emit('changeCurrentImgIndex', index);
       },
     },
   }

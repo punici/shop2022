@@ -17,9 +17,19 @@ export default {
       default: () => [],
     },
   },
+  data() {
+    return {
+      currentIndex: 0,
+    }
+  },
+  mounted() {
+    this.$bus.$on('changeCurrentImgIndex', (index) => {
+      this.currentIndex = index;
+    });
+  },
   computed: {
     skuImage() {
-      return this.skuImageList[0]||{};
+      return this.skuImageList[this.currentIndex]||{};
     },
   },
 

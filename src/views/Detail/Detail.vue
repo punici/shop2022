@@ -63,29 +63,14 @@
           <div class="choose">
             <div class="chooseArea">
               <div class="choosed"></div>
-              <dl>
-                <dt class="title">选择颜色</dt>
-                <dd changepirce="0" class="active">金色</dd>
-                <dd changepirce="40">银色</dd>
-                <dd changepirce="90">黑色</dd>
-              </dl>
-              <dl>
-                <dt class="title">内存容量</dt>
-                <dd changepirce="0" class="active">16G</dd>
-                <dd changepirce="300">64G</dd>
-                <dd changepirce="900">128G</dd>
-                <dd changepirce="1300">256G</dd>
-              </dl>
-              <dl>
-                <dt class="title">选择版本</dt>
-                <dd changepirce="0" class="active">公开版</dd>
-                <dd changepirce="-1000">移动版</dd>
-              </dl>
-              <dl>
-                <dt class="title">购买方式</dt>
-                <dd changepirce="0" class="active">官方标配</dd>
-                <dd changepirce="-240">优惠移动版</dd>
-                <dd changepirce="-390">电信优惠版</dd>
+              <dl v-for="attr in spuSaleAttrList" :key="attr.id">
+                <dt class="title">{{ attr.saleAttrName }}</dt>
+                <dd changepirce="0"
+                    v-for="attrValue in attr.spuSaleAttrValueList" :key="attrValue.id"
+                    :class="{active:attrValue.isChecked==='1'}"
+                    @click="changeActive(attrValue,attr.spuSaleAttrValueList)">
+                  {{ attrValue.saleAttrValueName }}
+                </dd>
               </dl>
             </div>
             <div class="cartWrap">
@@ -368,7 +353,17 @@ export default {
     }),
     ...mapGetters(['skuInfo', 'spuSaleAttrList', 'categoryView', 'valuesSkuJson']),
   },
-  methods: {},
+  methods: {
+    changeActive(attrValue,attrValueList) {
+      attrValueList.forEach(item => {
+        if (item.value === attrValue) {
+          item.checked = '1';
+        } else {
+          item.checked = '0';
+        }
+      });
+    },
+  },
 };
 </script>
 
