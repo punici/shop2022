@@ -1,9 +1,9 @@
 <template>
   <div class="spec-preview">
-    <img src="../images/s1.png" alt=""/>
+    <img :src="skuImage.imgUrl" alt=""/>
     <div class="event" @mousemove="changeMove"></div>
     <div class="big">
-      <img src="../images/s1.png" alt="" ref="big"/>
+      <img :src="skuImage.imgUrl" alt="" ref="big"/>
     </div>
     <div class="mask" ref="mask"></div>
   </div>

@@ -1,4 +1,4 @@
-import {reqGoodsInfo} from '@/api';
+import {reqGoodsInfo,reqAddOrUpdateShopCart} from '@/api';
 
 const state = {
   goodInfo: {},
@@ -17,6 +17,14 @@ const actions = {
       alert('获取数据失败', result.message);
     }
   },
+  async addOrUpdateShopCart({commit}, params) {
+    let result = await reqAddOrUpdateShopCart(params.skuId,params.skuNum);
+    if (result.code === 200) {
+      return result.message;
+    }else {
+      return Promise.reject(new Error(result.message));
+    }
+  }
 
 };
 const getters = {

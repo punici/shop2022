@@ -3,6 +3,7 @@ import Search from '../views/Search/Search';
 import Login from '../views/Login/Login';
 import Register from '../views/Register/Register';
 import Detail from '../views/Detail/Detail';
+import AddCartSuccess from '../views/AddCartSuccess/AddCartSuccess';
 
 const routes = [
   {
@@ -34,6 +35,11 @@ const routes = [
     name: 'Detail',
     component: Detail,
     meta: {isHideFooter: true},
+  },
+  {
+    path: '/addCartSuccess',
+    name: 'AddCartSuccess',
+    component: AddCartSuccess,
   },
   // 重定向,在项目跑起来的时候，访问/，默认跳转到首页
   {

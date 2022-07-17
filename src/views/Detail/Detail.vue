@@ -75,12 +75,14 @@
             </div>
             <div class="cartWrap">
               <div class="controls">
-                <input autocomplete="off" class="itxt">
-                <a href="javascript:" class="plus">+</a>
-                <a href="javascript:" class="mins">-</a>
+                <input autocomplete="off" class="itxt" v-model.number="skuNum"
+                       @change="changeSkuNum">
+                <a href="javascript:" class="plus" @click="skuNum++">+</a>
+                <a href="javascript:" class="mins" @click="skuNum > 1 ? skuNum-- : skuNum"
+                   :disabled="skuNum<1">-</a>
               </div>
               <div class="add">
-                <a href="javascript:">加入购物车</a>
+                <a @click="addShopCar">加入购物车</a>
               </div>
             </div>
           </div>
@@ -341,6 +343,11 @@ export default {
     ImageList,
     Zoom,
   },
+  data() {
+    return {
+      skuNum: 1,
+    };
+  },
   mounted() {
     this.$store.dispatch('getGoodInfo', this.skuId);
   },
@@ -354,14 +361,42 @@ export default {
     ...mapGetters(['skuInfo', 'spuSaleAttrList', 'categoryView', 'valuesSkuJson']),
   },
   methods: {
-    changeActive(attrValue,attrValueList) {
+    changeActive(attrValue, attrValueList) {
       attrValueList.forEach(item => {
-        if (item.value === attrValue) {
-          item.checked = '1';
+        if (item.id === attrValue.id) {
+          item.isChecked = '1';
         } else {
-          item.checked = '0';
+          item.isChecked = '0';
         }
       });
+    },
+    changeSkuNum(event) {
+      //凡是用户输入的地方一定有幺儿子【情况一定想全了】
+      //获取用户输入进来的内容||两种特殊情况（出现汉字、英文字母、特殊符号）、出现小于1的数字
+      let result = event.target.value * 1;
+      //非法的情况判断一下
+      if (isNaN(result) || result < 1) {
+        //一定是非法的情况
+        this.skuNum = 1;
+      } else {
+        //属于正常现象||如果result出现了小数取整
+        this.skuNum = parseInt(result);
+      }
+    },
+    addShopCar() {
+     try {
+       this.$store.dispatch('addOrUpdateShopCart', {
+         skuId: this.skuId,
+         skuNum: this.skuNum,
+       });
+       //添加成功后，提示用户
+       this.$router.push({
+         name: 'AddCartSuccess',
+
+       });
+     } catch (e) {
+       alert('添加购物车失败!');
+     }
     },
   },
 };
