@@ -40,6 +40,7 @@ const routes = [
     path: '/addCartSuccess',
     name: 'AddCartSuccess',
     component: AddCartSuccess,
+    meta: {isHideFooter: true},
   },
   // 重定向,在项目跑起来的时候，访问/，默认跳转到首页
   {
