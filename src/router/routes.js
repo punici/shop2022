@@ -4,6 +4,7 @@ import Login from '../views/Login/Login';
 import Register from '../views/Register/Register';
 import Detail from '../views/Detail/Detail';
 import AddCartSuccess from '../views/AddCartSuccess/AddCartSuccess';
+import ShopCart from '../views/ShopCart/ShopCart';
 
 const routes = [
   {
@@ -41,6 +42,11 @@ const routes = [
     name: 'AddCartSuccess',
     component: AddCartSuccess,
     meta: {isHideFooter: true},
+  },
+  {
+    path: '/shopCart',
+    name: 'ShopCart',
+    component: ShopCart,
   },
   // 重定向,在项目跑起来的时候，访问/，默认跳转到首页
   {
