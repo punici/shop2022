@@ -26,7 +26,7 @@
           </li>
           <li class="cart-list-con5">
             <a href="javascript:void(0)" class="mins"
-               @click="changeSkuNum('mins',-1,sku)">-</a>
+               @click="changeSkuNum('minus',-1,sku)">-</a>
             <input autocomplete="off" type="text" :value="sku.skuNum" minnum="1" class="itxt"
                    @change="changeSkuNum('input',$event.target.value*1,sku)">
             <a href="javascript:void(0)" class="plus"
@@ -45,11 +45,11 @@
     </div>
     <div class="cart-tool">
       <div class="select-all">
-        <input class="chooseAll" type="checkbox" :checked="isAllChecked">
+        <input class="chooseAll" type="checkbox" :checked="isAllChecked" @change="updateAllChecked">
         <span>全选</span>
       </div>
       <div class="option">
-        <a href="#none">删除选中的商品</a>
+        <a @click="deleteAllCheckedCart">删除选中的商品</a>
         <a href="#none">移到我的关注</a>
         <a href="#none">清除下柜商品</a>
       </div>
@@ -161,7 +161,23 @@ export default {
       } catch (e) {
         alert(e.message);
       }
-
+    },
+    async deleteAllCheckedCart() {
+      try {
+        await this.$store.dispatch('deleteAllCheckedCart');
+        this.getCartDada();
+      } catch (e) {
+        alert(e.message);
+      }
+    },
+    async updateAllChecked(e) {
+      try {
+        let isChecked = e.target.checked ? 1 : 0;
+        await this.$store.dispatch('updateAllChecked', isChecked);
+        this.getCartDada();
+      } catch (e) {
+        alert(e.message);
+      }
     },
   },
 };
