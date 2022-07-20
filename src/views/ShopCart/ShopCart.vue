@@ -13,26 +13,30 @@
       <div class="cart-body">
         <ul class="cart-list" v-for="sku in cartList" :key="sku.id">
           <li class="cart-list-con1">
-            <input type="checkbox" name="chk_list" :checked="sku.isChecked">
+            <input type="checkbox" name="chk_list" :checked="sku.isChecked"
+                   @change="updateCheckedById(sku,$event)">
           </li>
           <li class="cart-list-con2">
             <img :src="sku.imgUrl">
-            <div class="item-msg">{{sku.skuName}}</div>
+            <div class="item-msg">{{ sku.skuName }}</div>
           </li>
 
           <li class="cart-list-con4">
-            <span class="price">{{sku.skuPrice}}.00</span>
+            <span class="price">{{ sku.skuPrice }}.00</span>
           </li>
           <li class="cart-list-con5">
-            <a href="javascript:void(0)" class="mins">-</a>
-            <input autocomplete="off" type="text" value="1" minnum="1" class="itxt">
-            <a href="javascript:void(0)" class="plus">+</a>
+            <a href="javascript:void(0)" class="mins"
+               @click="changeSkuNum('mins',-1,sku)">-</a>
+            <input autocomplete="off" type="text" :value="sku.skuNum" minnum="1" class="itxt"
+                   @change="changeSkuNum('input',$event.target.value*1,sku)">
+            <a href="javascript:void(0)" class="plus"
+               @click="changeSkuNum('add',+1,sku)">+</a>
           </li>
           <li class="cart-list-con6">
-            <span class="sum">399</span>
+            <span class="sum">{{ sku.skuNum * sku.skuPrice }}.00</span>
           </li>
           <li class="cart-list-con7">
-            <a href="#none" class="sindelet">删除</a>
+            <a href="#none" class="sindelet" @click="deleteShopCart(sku.skuId)">删除</a>
             <br>
             <a href="#none">移到收藏</a>
           </li>
@@ -41,7 +45,7 @@
     </div>
     <div class="cart-tool">
       <div class="select-all">
-        <input class="chooseAll" type="checkbox">
+        <input class="chooseAll" type="checkbox" :checked="isAllChecked">
         <span>全选</span>
       </div>
       <div class="option">
@@ -55,7 +59,7 @@
         </div>
         <div class="sumprice">
           <em>总价（不含运费） ：</em>
-          <i class="summoney">0</i>
+          <em class="summoney">{{ sumPayPrice }}.00</em>
         </div>
         <div class="sumbtn">
           <a class="sum-btn" href="###" target="_blank">结算</a>
@@ -67,6 +71,7 @@
 
 <script>
 import {mapState} from 'vuex';
+import throttle from 'lodash/throttle';
 
 export default {
   name: 'ShopCart',
@@ -75,12 +80,88 @@ export default {
   },
   computed: {
     ...mapState({
-      cartList: state => state.shopCart.cartList||[],
+      cartList: state => state.shopCart.cartList || [],
     }),
+    sumPayPrice() {
+      let sum = 0;
+      this.cartList.forEach(item => {
+        if (item.isChecked) {
+          sum += item.skuNum * item.skuPrice;
+        }
+      });
+      return sum;
+    },
+    isAllChecked() {
+      return this.cartList.every(item => item.isChecked === 1);
+    },
   },
   methods: {
     getCartDada() {
       this.$store.dispatch('getCartList');
+    },
+    async deleteShopCart(skuId) {
+      try {
+        await this.$store.dispatch('deleteCartById', skuId);
+        this.getCartDada();
+      } catch (e) {
+        alert(e.message);
+      }
+    },
+    changeSkuNum: throttle(async function(flag, disNum, shop) {
+      //第一个参数:shop,点击的那个产品
+      //第二个参数:disNum,目前(加减按钮)，数量发生变化的数值,如果是表单元素disNum【最终数值 - 起始数值】
+      //第三个参数：flag,用来区分（加、减、文本框标记）
+      switch (flag) {
+          //加
+        case 'add':
+          //disNum:数量变化的数值，带给服务器的
+          disNum = 1;
+          break;
+        case 'minus':
+          //当前点击的产品个数如果大于1，带给服务器数量变化的数值 -1
+          if (shop.skuNum > 1) {
+            disNum = -1;
+          } else {
+            //点击产品的个数小于等于，带给服务器数量变化的数值 0 [数字原封不动]
+            disNum = 0;
+          }
+          break;
+        case 'input':
+          //非正常的情况判断---【汉字、出现负数】
+          if (isNaN(disNum) || disNum < 1) {
+            //用户输入进来的数值不合法，已有的数量不变
+            disNum = 0;
+          } else {
+            //如果用户输入进来数值--正常（算出差值）
+            disNum = parseInt(disNum) - shop.skuNum;
+          }
+          break;
+      }
+      //判断修改成功与失败
+      try {
+        //发请求，通知服务器修改产品的数量，修改产品数量如果成功，需要再次获取购物车的数据进行展示，展示最新的数据。
+        await this.$store.dispatch('addOrUpdateShopCart', {
+          skuId: shop.skuId,
+          skuNum: disNum,
+        });
+        //再次获取购物车最新的数据进行展示
+        this.getCartDada();
+      } catch (error) {
+        alert('修改失败');
+      }
+    }, 100),
+    async updateCheckedById(sku, e) {
+      let checked = e.target.checked ? 1 : 0;
+      try {
+        await this.$store.dispatch('updateCheckedById', {
+          skuId: sku.skuId,
+          isChecked: checked,
+        });
+        this.getCartDada();
+      } catch (e) {
+        alert(e.message);
+      }
+
     },
   },
 };
