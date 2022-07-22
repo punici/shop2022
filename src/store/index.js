@@ -7,6 +7,7 @@ import home from './home.js';
 import search from './search.js';
 import detail from './detail.js';
 import shopCart from './shopcart.js';
+import user from './user.js';
 
 
 //使用插件
@@ -20,5 +21,6 @@ export default new Vuex.Store({
     search,
     detail,
     shopCart,
+    user,
   },
 });

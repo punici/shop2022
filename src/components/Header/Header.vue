@@ -6,12 +6,17 @@
       <div class="container">
         <div class="loginList">
           <p>尚品汇欢迎您！</p>
-          <p>
+          <p v-if="!userInfo.name">
             <span>请</span>
             <!-- 声明式导航，务必有to属性 -->
             <router-link to="/login">登录</router-link>
             |
             <router-link to="/register">免费注册</router-link>
+          </p>
+          <p v-else>
+            <span>您好，</span>
+            <router-link to="/user">{{userInfo.name}}   </router-link>
+            <a @click="logout" >退出</a>
           </p>
         </div>
         <div class="typeList">
@@ -61,6 +66,11 @@ export default {
       this.keyword = '';
     });
   },
+  computed: {
+    userInfo() {
+      return this.$store.state.user.userInfo;
+    },
+  },
   methods: {
     // 搜索按钮回调函数，需要向search路由的调转
     goSearch() {
@@ -75,6 +85,10 @@ export default {
           keyword: this.keyword,
         },
       });
+    },
+    logout() {
+      this.$store.dispatch('logout');
+      this.$router.push('/login');
     },
   },
 };

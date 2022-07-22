@@ -4,6 +4,7 @@ import nprogress from 'nprogress';
 //如果出现进度条没有显示：一定是你忘记了引入样式了
 import 'nprogress/nprogress.css';
 import store from '@/store';
+import {getToken } from '@/utils/token';
 
 //利用axios对象的方法create方法创建一个axios实例
 const requests = axios.create({
@@ -18,6 +19,10 @@ requests.interceptors.request.use(config => {
   //config是请求的配置对象
   if (store.state.detail.uuidToken) {
     config.headers.userTempId = store.state.detail.uuidToken;
+  }
+
+  if (getToken("TOKEN")) {
+    config.headers.token = getToken("TOKEN");
   }
   nprogress.start();
   return config;
