@@ -86,9 +86,9 @@ export default {
         },
       });
     },
-    logout() {
-      this.$store.dispatch('logout');
-      this.$router.push('/login');
+    async logout() {
+      await this.$store.dispatch('logout');
+      await this.$router.push('/login');
     },
   },
 };

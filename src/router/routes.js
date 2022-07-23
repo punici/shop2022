@@ -5,6 +5,9 @@ import Register from '../views/Register/Register';
 import Detail from '../views/Detail/Detail';
 import AddCartSuccess from '../views/AddCartSuccess/AddCartSuccess';
 import ShopCart from '../views/ShopCart/ShopCart';
+import Trade from '../views/Trade/Trade';
+import Pay from '../views/Pay/Pay';
+import PaySuccess from '../views/PaySuccess/PaySuccess';
 
 const routes = [
   {
@@ -47,6 +50,20 @@ const routes = [
     path: '/shopCart',
     name: 'ShopCart',
     component: ShopCart,
+  },
+  {
+    path: '/trade',
+    name: 'Trade',
+    component: Trade,
+  },
+  {
+    path: '/pay/:orderId',
+    name: 'Pay',
+    component: Pay,
+  }, {
+    path: '/paySuccess',
+    name: 'PaySuccess',
+    component: PaySuccess,
   },
   // 重定向,在项目跑起来的时候，访问/，默认跳转到首页
   {

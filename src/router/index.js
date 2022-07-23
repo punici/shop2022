@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import routes from './routes';
+import store from '@/store';
 
 Vue.use(VueRouter);
 
@@ -45,7 +46,7 @@ VueRouter.prototype.replace = function(location, resolve, reject) {
   }
 };
 
-const router = new VueRouter({
+let router = new VueRouter({
   routes,
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
@@ -54,6 +55,34 @@ const router = new VueRouter({
       return { x: 0, y: 0 };
     }
   }
+});
+
+router.beforeEach(async (to, from, next) => {
+  if (to.matched.length === 0) {
+    next('/');
+  }
+  let token = store.state.user.token;
+  let name = store.state.user.name;
+  if (token) {
+    if (to.path === '/login') {
+      next('/home');
+    } else {
+      if (name) {
+        next();
+      } else {
+        try {
+          await store.dispatch('getUserInfo');
+          next();
+        } catch (e) {
+          await store.dispatch('logout');
+          next('/login');
+        }
+      }
+    }
+  } else {
+    next()
+  }
+
 });
 
 export default router;

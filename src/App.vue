@@ -7,13 +7,14 @@
     </div>
     <router-view/>
     <!-- 在Home、Search显示 在登录 注册隐藏 -->
-    <!--    <Footer v-show="$route.path==='/home'||$route.path==='/search'"/>-->
     <Footer v-show="$route.meta.isHideFooter"/>
   </div>
 </template>
 
-<style lang="less">
-
+<style lang="css">
+#nprogress .bar {
+  background: red !important;
+}
 </style>
 
 <script>

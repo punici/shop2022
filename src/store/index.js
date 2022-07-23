@@ -8,7 +8,7 @@ import search from './search.js';
 import detail from './detail.js';
 import shopCart from './shopcart.js';
 import user from './user.js';
-
+import trade from './trade.js';
 
 //使用插件
 Vue.use(Vuex);
@@ -22,5 +22,6 @@ export default new Vuex.Store({
     detail,
     shopCart,
     user,
+    trade,
   },
 });
