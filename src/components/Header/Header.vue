@@ -15,7 +15,7 @@
           </p>
           <p v-else>
             <span>您好，</span>
-            <router-link to="/user">{{userInfo.name}}   </router-link>
+            <router-link to="/center">{{userInfo.name}}   </router-link>
             <a @click="logout" >退出</a>
           </p>
         </div>

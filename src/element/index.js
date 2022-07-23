@@ -4,9 +4,6 @@ import Vue from 'vue';
 const element = {
   install: function(Vue) {
     Vue.use(Button);
-    Vue.use(Notification);
-    Vue.use(MessageBox);
-    Vue.use(Message);
   },
 };
 Vue.prototype.$notify = Notification;

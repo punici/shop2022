@@ -9,6 +9,8 @@ import Trade from '../views/Trade/Trade';
 import Pay from '../views/Pay/Pay';
 import PaySuccess from '../views/PaySuccess/PaySuccess';
 import Center from '../views/Center/Center';
+import GroupOrder from '../views/Center/GroupOrder/GroupOrder';
+import MyOrder from '../views/Center/MyOrder/MyOrder';
 
 const routes = [
   {
@@ -70,6 +72,22 @@ const routes = [
     path: '/center',
     name: 'Center',
     component: Center,
+    children: [
+      {
+        path: 'groupOrder',
+        name: 'GroupOrder',
+        component: GroupOrder,
+      },
+      {
+        path: 'myOrder',
+        name: 'MyOrder',
+        component: MyOrder,
+      },{
+        path: '/center',
+        redirect: '/center/groupOrder',
+      }
+    ]
+
   },
   // 重定向,在项目跑起来的时候，访问/，默认跳转到首页
   {
