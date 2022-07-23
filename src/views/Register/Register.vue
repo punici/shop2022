@@ -8,30 +8,42 @@
       </h3>
       <div class="content">
         <label>手机号:</label>
-        <input type="text" placeholder="请输入你的手机号" v-model="phone">
-        <span class="error-msg">错误提示信息</span>
+        <!--
+          name:给每一个表单元素添加一个名字，需要让vee-valadite区分验证的是哪一个表单元素
+           v-validate=验证规则
+         -->
+        <input type="text" name="phone" placeholder="请输入你的手机号" v-model="phone"
+               v-validate="{required:true,regex:/^1\d{10}$/}"
+               :class="{invalid:errors.has('phone')}">
+        <span class="error-msg">{{ errors.first('phone') }}</span>
       </div>
       <div class="content">
         <label>验证码:</label>
-        <input type="text" placeholder="请输入验证码" v-model="code">
+        <input type="text" name="code" placeholder="请输入验证码" v-model="code"
+               v-validate="{ required: true, regex: /^\d{6}$/ }" :class="{ invalid: errors.has('code') }">
         <button style="width: 100px;height: 38px" @click="getCode">获取验证码</button>
         <img ref="code" src="http://182.92.128.115/api/user/passport/code" alt="code">
-        <span class="error-msg">错误提示信息</span>
+        <span class="error-msg">{{ errors.first('code') }}</span>
       </div>
       <div class="content">
         <label>登录密码:</label>
-        <input type="password" placeholder="请输入你的登录密码" v-model="password">
-        <span class="error-msg">错误提示信息</span>
+        <input type="password" placeholder="请输入你的登录密码" v-model="password"
+               name="password" v-validate="{ required: true, regex: /^[0-9a-zA-Z]{8,20}$/ }"
+               :class="{ invalid: errors.has('password') }">
+        <span class="error-msg">{{ errors.first('password') }}</span>
       </div>
       <div class="content">
         <label>确认密码:</label>
-        <input type="password" placeholder="请输入确认密码" v-model="password1">
-        <span class="error-msg">错误提示信息</span>
+        <input type="password" placeholder="请输入确认密码" v-model="password1"
+               name="password1" v-validate="{ required: true, is:password}"
+               :class="{ invalid: errors.has('password1') }">
+        <span class="error-msg">{{ errors.first('password1') }}</span>
       </div>
       <div class="controls">
-        <input name="m1" type="checkbox" :checked="agree">
+        <input type="checkbox" :checked="agree"
+               name="agree" v-validate="{ required: true,'agree':true}" :class="{ invalid: errors.has('agree') }">
         <span>同意协议并注册《尚品汇用户协议》</span>
-        <span class="error-msg">错误提示信息</span>
+        <span class="error-msg">{{ errors.first('agree') }}</span>
       </div>
       <div class="btn">
         <button @click="userRegister">完成注册</button>
@@ -71,41 +83,36 @@ export default {
   },
   methods: {
     async getCode() {
-      console.log(this.phone);
-      if (this.phone && this.phone.length > 0) {
-
+      const success = await this.$validator.verify("phone");
+      if (this.phone&&success) {
         try {
           await this.$store.dispatch('getCode', this.phone);
           this.code = this.$store.state.user.code;
 
         } catch (e) {
-          alert(e);
+          await this.$alert(e.message);
         }
       }
     },
     async userRegister() {
-      if (this.phone && this.phone.length > 0 && this.code && this.code.length > 0 && this.password &&
-          this.password.length > 0 && this.password1 && this.password1.length > 0) {
-        if (this.password === this.password1) {
-          try {
-            let result = await this.$store.dispatch('userRegister', {
-              phone: this.phone,
-              code: this.code,
-              password: this.password,
-            });
-            if (result.message === '成功') {
-              await this.$router.push('/login');
-            } else {
-              alert(result.message);
-            }
-          } catch (e) {
-            alert(e);
+      //这里是vee-valadiate提供的一个方法，如果表单验证全部成功，返回布尔值真，
+      //如有有一个字段验证失败，返回布尔值false
+      const success = await this.$validator.validateAll();
+      if (success) {
+        try {
+          let result = await this.$store.dispatch('userRegister', {
+            phone: this.phone,
+            code: this.code,
+            password: this.password,
+          });
+          if (result.message === '成功') {
+            await this.$router.push('/login');
+          } else {
+            this.$message.error(result.message);
           }
-        } else {
-          alert('两次密码不一致');
+        } catch (e) {
+          alert(e);
         }
-      } else {
-        alert('请填写完整信息');
       }
     },
   },

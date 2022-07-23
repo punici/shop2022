@@ -58,15 +58,43 @@ const routes = [
     path: '/trade',
     name: 'Trade',
     component: Trade,
+    //路由独享守卫
+    beforeEnter: (to, from, next) => {
+      //进入支付页面，必须从交易页面而来
+      if (from.path === '/shopCart') {
+        next();
+      } else {
+        next(false);
+      }
+    },
   },
   {
     path: '/pay/:orderId',
     name: 'Pay',
     component: Pay,
-  }, {
+    //路由独享守卫
+    beforeEnter: (to, from, next) => {
+      //进入支付页面，必须从交易页面而来
+      if (from.path.indexOf('/trade') !== -1) {
+        next();
+      } else {
+        next(false);
+      }
+    },
+  },
+  {
     path: '/paySuccess',
     name: 'PaySuccess',
     component: PaySuccess,
+    //路由独享守卫
+    beforeEnter: (to, from, next) => {
+      //进入支付页面，必须从交易页面而来
+      if (from.path.indexOf('/pay') !== -1) {
+        next();
+      } else {
+        next(false);
+      }
+    },
   },
   {
     path: '/center',
@@ -82,11 +110,12 @@ const routes = [
         path: 'myOrder',
         name: 'MyOrder',
         component: MyOrder,
-      },{
+      },
+      {
         path: '/center',
-        redirect: '/center/groupOrder',
-      }
-    ]
+        redirect: '/center/myOrder',
+      },
+    ],
 
   },
   // 重定向,在项目跑起来的时候，访问/，默认跳转到首页

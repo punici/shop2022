@@ -87,8 +87,8 @@ export default {
           password: this.password,
         });
         await this.$store.dispatch('getUserInfo');
-        await this.$router.push('/home');
-
+        let toPath = this.$route.query.redirect||'/home';
+        await this.$router.push(toPath);
       } catch (e) {
         alert(e);
       }

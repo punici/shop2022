@@ -52,9 +52,9 @@ let router = new VueRouter({
     if (savedPosition) {
       return savedPosition;
     } else {
-      return { x: 0, y: 0 };
+      return {x: 0, y: 0};
     }
-  }
+  },
 });
 
 router.beforeEach(async (to, from, next) => {
@@ -80,7 +80,21 @@ router.beforeEach(async (to, from, next) => {
       }
     }
   } else {
-    next()
+    //未登录的判断
+    //如果用户未登录：去交易页面trade、去支付页面pay、支付成功页面paysuccess、个人中心 center/myorder  center/grouporder
+    //用户未登录应该去登录页
+    //获取用户未登录想去的路由的路径
+    let toPath = to.path;
+    //判断未登录：去trade、去支付、去支付成功、去个人中心【我的订单、团购订单】
+    if (toPath.indexOf('trade') !== -1 || toPath.indexOf('pay') !== -1 ||
+        toPath.indexOf('center') !== -1) {
+      //判断未登录：去trade、去支付、去支付成功、去个人中心【我的订单、团购订单】
+      //跳转到登录页
+      next('/login?redirect=' + toPath);
+    } else {
+      //去的并非上面这些路由,放行
+      next();
+    }
   }
 
 });

@@ -7,9 +7,11 @@ import Carousel from './components/Carousel/Carousel';
 import Pagination from './components/Pagination/Pagination';
 import '@/mock/mockServer';
 import 'swiper/css/swiper.css';
-import "./assets/iconfont/iconfont.css";
+import './assets/iconfont/iconfont.css';
 import * as API from '@/api';
-import element from '@/element'
+import element from '@/element';
+import VueLazyload from 'vue-lazyload';
+import "@/plugins/validate";
 
 Vue.config.productionTip = false;
 Vue.component(TypeNav.name, TypeNav);
@@ -17,6 +19,9 @@ Vue.component(Carousel.name, Carousel);
 Vue.component(Pagination.name, Pagination);
 
 Vue.use(element);
+Vue.use(VueLazyload,{
+  loading: require('@/assets/image/1.gif')
+});
 
 new Vue({
   router,
