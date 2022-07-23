@@ -96,6 +96,7 @@ export default {
   data() {
     return {
       msg: '',
+      orderId: '',
     };
   },
   mounted() {
@@ -139,6 +140,7 @@ export default {
 
       let result = await this.$API.reqSubmitOrder(tradeNo, data);
       if (result.code === 200) {
+        this.orderId = result.data;
         await this.$router.push('/pay/' + result.data);
       } else {
         alert(result.message);

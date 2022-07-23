@@ -8,6 +8,7 @@ import ShopCart from '../views/ShopCart/ShopCart';
 import Trade from '../views/Trade/Trade';
 import Pay from '../views/Pay/Pay';
 import PaySuccess from '../views/PaySuccess/PaySuccess';
+import Center from '../views/Center/Center';
 
 const routes = [
   {
@@ -64,6 +65,11 @@ const routes = [
     path: '/paySuccess',
     name: 'PaySuccess',
     component: PaySuccess,
+  },
+  {
+    path: '/center',
+    name: 'Center',
+    component: Center,
   },
   // 重定向,在项目跑起来的时候，访问/，默认跳转到首页
   {

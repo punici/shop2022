@@ -9,11 +9,14 @@ import '@/mock/mockServer';
 import 'swiper/css/swiper.css';
 import "./assets/iconfont/iconfont.css";
 import * as API from '@/api';
+import element from '@/element'
 
 Vue.config.productionTip = false;
 Vue.component(TypeNav.name, TypeNav);
 Vue.component(Carousel.name, Carousel);
 Vue.component(Pagination.name, Pagination);
+
+Vue.use(element);
 
 new Vue({
   router,
