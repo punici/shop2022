@@ -136,19 +136,12 @@ export default {
         orderComment: this.msg, //用户留言信息
         orderDetailList: this.detailArrayList, //购物车清单
       };
-      try { //发请求
-        let result = await this.$store.dispatch('submitOrder', {
-          tradeNo,
-          data,
-        });
-        //失败返回code->201 成功返回->200:返回数据当中带有数字【支付订单号:品牌每笔交易的标识符】
-        //成功
-        this.orderId = result.data;
-        //路由跳转到支付页面
-        await this.$router.push('/pay/?orderId=' + this.orderId);
-      } catch (e) {
-        //失败
-        alert(e.message);
+
+      let result = await this.$API.reqSubmitOrder(tradeNo, data);
+      if (result.code === 200) {
+        await this.$router.push('/pay/' + result.data);
+      } else {
+        alert(result.message);
       }
     },
   },
