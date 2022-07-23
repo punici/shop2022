@@ -1,63 +1,51 @@
-import Home from '../views/Home/Home.vue';
-import Search from '../views/Search/Search';
-import Login from '../views/Login/Login';
-import Register from '../views/Register/Register';
-import Detail from '../views/Detail/Detail';
-import AddCartSuccess from '../views/AddCartSuccess/AddCartSuccess';
-import ShopCart from '../views/ShopCart/ShopCart';
-import Trade from '../views/Trade/Trade';
-import Pay from '../views/Pay/Pay';
-import PaySuccess from '../views/PaySuccess/PaySuccess';
-import Center from '../views/Center/Center';
-import GroupOrder from '../views/Center/GroupOrder/GroupOrder';
-import MyOrder from '../views/Center/MyOrder/MyOrder';
-
+//component右侧数值：放置的是一个箭头函数，当这个home路由被访问的时候，才会执行；
+//当用户访问当前Home的时候，我才加载Home路由组件，不访问，不加载当前Home路由组件
 const routes = [
   {
     path: '/home',
     name: 'Home',
-    component: Home,
+    component: () => import('../views/Home/Home.vue'),
     meta: {isHideFooter: true},
   },
   {
     path: '/search/:keyword?',
     name: 'Search',
-    component: Search,
+    component: () => import('../views/Search/Search.vue'),
     meta: {isHideFooter: true},
   },
   {
     path: '/login',
     name: 'Login',
-    component: Login,
+    component: () => import('../views/Login/Login.vue'),
     meta: {isHideFooter: false},
   },
   {
     path: '/register',
     name: 'Register',
-    component: Register,
+    component: () => import('../views/Register/Register.vue'),
     meta: {isHideFooter: false},
   },
   {
     path: '/detail/:skuId',
     name: 'Detail',
-    component: Detail,
+    component: () => import('../views/Detail/Detail.vue'),
     meta: {isHideFooter: true},
   },
   {
     path: '/addCartSuccess',
     name: 'AddCartSuccess',
-    component: AddCartSuccess,
+    component: () => import('../views/AddCartSuccess/AddCartSuccess.vue'),
     meta: {isHideFooter: true},
   },
   {
     path: '/shopCart',
     name: 'ShopCart',
-    component: ShopCart,
+    component: () => import('../views/ShopCart/ShopCart.vue'),
   },
   {
     path: '/trade',
     name: 'Trade',
-    component: Trade,
+    component: () => import('../views/Trade/Trade.vue'),
     //路由独享守卫
     beforeEnter: (to, from, next) => {
       //进入支付页面，必须从交易页面而来
@@ -71,7 +59,7 @@ const routes = [
   {
     path: '/pay/:orderId',
     name: 'Pay',
-    component: Pay,
+    component: () => import('../views/Pay/Pay.vue'),
     //路由独享守卫
     beforeEnter: (to, from, next) => {
       //进入支付页面，必须从交易页面而来
@@ -85,7 +73,7 @@ const routes = [
   {
     path: '/paySuccess',
     name: 'PaySuccess',
-    component: PaySuccess,
+    component: () => import('../views/PaySuccess/PaySuccess.vue'),
     //路由独享守卫
     beforeEnter: (to, from, next) => {
       //进入支付页面，必须从交易页面而来
@@ -99,17 +87,17 @@ const routes = [
   {
     path: '/center',
     name: 'Center',
-    component: Center,
+    component: () => import('../views/Center/Center.vue'),
     children: [
       {
         path: 'groupOrder',
         name: 'GroupOrder',
-        component: GroupOrder,
+        component: () => import('../views/Center/GroupOrder/GroupOrder.vue'),
       },
       {
         path: 'myOrder',
         name: 'MyOrder',
-        component: MyOrder,
+        component: () => import('../views/Center/MyOrder/MyOrder.vue'),
       },
       {
         path: '/center',
